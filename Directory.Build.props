@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <!-- Phase 7b-1: write support is compiled in ONLY when -p:AcerWriteEnabled=true is passed on purpose. Never set it here or in a csproj. -->
+  <PropertyGroup Condition="'$(AcerWriteEnabled)' == 'true'">
+    <DefineConstants>$(DefineConstants);ACER_WRITE_ENABLED</DefineConstants>
+  </PropertyGroup>
+</Project>

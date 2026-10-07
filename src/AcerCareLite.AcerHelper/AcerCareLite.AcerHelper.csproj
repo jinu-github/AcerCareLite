@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AssemblyName>AcerCareLite.AcerHelper</AssemblyName>
+    <RootNamespace>AcerCareLite.AcerHelper</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Only the wire contract is shared. Core itself (SQLite, MVVM toolkit) is deliberately not loaded into the elevated process. -->
+    <Compile Include="..\AcerCareLite.Core\Acer\AcerHelperProtocol.cs" Link="AcerHelperProtocol.cs" />
+    <Compile Include="..\AcerCareLite.Core\Acer\PeerPolicy.cs" Link="PeerPolicy.cs" />
+    <Compile Include="..\AcerCareLite.Core\Acer\ProtectedLocationPolicy.cs" Link="ProtectedLocationPolicy.cs" />
+    <!-- The single native-import file and the ACL reader, shared with the main app's Acer project. -->
+    <Compile Include="..\AcerCareLite.Acer\PeerProcess.cs" Link="PeerProcess.cs" />
+    <Compile Include="..\AcerCareLite.Acer\HelperLocationGate.cs" Link="HelperLocationGate.cs" />
+  </ItemGroup>
+</Project>

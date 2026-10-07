@@ -1,0 +1,52 @@
+<UserControl x:Class="AcerCareLite.App.Views.HardwareView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <DataTemplate x:Key="RowTemplate">
+            <StackPanel Margin="0,6,0,6">
+                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Detail}" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="Section" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="MaxWidth" Value="1040" />
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <DockPanel MaxWidth="1040" HorizontalAlignment="Left">
+                <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshCommand}"
+                        Style="{StaticResource ActionButton}" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding StatusText}" DockPanel.Dock="Right" Margin="0,0,12,0"
+                           Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" />
+                <TextBlock Text="Hardware" FontSize="28" FontWeight="SemiBold" />
+            </DockPanel>
+            <Border Style="{StaticResource Section}" Margin="0,20,0,16">
+                <StackPanel>
+                    <TextBlock Text="Processor" Style="{StaticResource CardTitle}" />
+                    <ItemsControl ItemsSource="{Binding Cpu}" ItemTemplate="{StaticResource RowTemplate}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Graphics" Style="{StaticResource CardTitle}" />
+                    <ItemsControl ItemsSource="{Binding Gpu}" ItemTemplate="{StaticResource RowTemplate}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Memory modules" Style="{StaticResource CardTitle}" />
+                    <ItemsControl ItemsSource="{Binding Memory}" ItemTemplate="{StaticResource RowTemplate}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Storage devices" Style="{StaticResource CardTitle}" />
+                    <ItemsControl ItemsSource="{Binding Disks}" ItemTemplate="{StaticResource RowTemplate}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

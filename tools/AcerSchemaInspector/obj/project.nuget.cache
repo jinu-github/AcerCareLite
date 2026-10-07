@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "gBgRyXzf1e8=",
+  "success": true,
+  "projectFilePath": "D:\\AcerCareLite-main\\AcerCareLite\\tools\\AcerSchemaInspector\\AcerSchemaInspector.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nitro 5\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\Nitro 5\\.nuget\\packages\\system.management\\8.0.0\\system.management.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

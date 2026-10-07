@@ -1,0 +1,7 @@
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\AcerCareLite.AcerHelper.exe
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\AcerCareLite.AcerHelper.dll
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\AcerCareLite.AcerHelper.deps.json
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\AcerCareLite.AcerHelper.runtimeconfig.json
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\AcerCareLite.AcerHelper.pdb
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\System.CodeDom.dll
+C:\Users\Nitro 5\AppData\Local\Temp\AcerCareLite-stage-bd869a6749da472087404ba0efeec803\System.Management.dll

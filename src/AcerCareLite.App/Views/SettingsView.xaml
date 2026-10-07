@@ -1,0 +1,136 @@
+<UserControl x:Class="AcerCareLite.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Section" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="MaxWidth" Value="1040" />
+            <Setter Property="Margin" Value="0,0,16,16" />
+        </Style>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding StatusText}" Margin="0,8,0,0" Foreground="{StaticResource AccentBrush}" />
+            <TextBlock Margin="0,8,0,16" Style="{StaticResource Hint}" MaxWidth="1000" HorizontalAlignment="Left"
+                       Text="Changes save immediately." />
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="General" Style="{StaticResource CardTitle}" />
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Start with Windows" />
+                            <TextBlock Text="Adds AcerCareLite to your startup apps. Turn it off here or in Utilities." Style="{StaticResource Hint}" />
+                        </StackPanel>
+                        <CheckBox Grid.Column="1" IsChecked="{Binding StartWithWindows}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Text="Start minimized" VerticalAlignment="Center" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding StartMinimized}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Text="Minimize to tray" VerticalAlignment="Center" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding MinimizeToTray}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Monitoring" Style="{StaticResource CardTitle}" />
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Refresh interval" />
+                            <TextBlock Text="How often the Dashboard and Battery pages update while they are open." Style="{StaticResource Hint}" />
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding IntervalChoices}"
+                                 SelectedItem="{Binding MonitoringIntervalSeconds, Mode=TwoWay}" ItemStringFormat="{}{0} s" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Notifications" Style="{StaticResource CardTitle}" />
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Text="Show notifications" VerticalAlignment="Center" />
+                        <CheckBox Grid.Column="1" IsChecked="{Binding NotificationsEnabled}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                    </Grid>
+                    <StackPanel IsEnabled="{Binding NotificationsEnabled}">
+                        <Grid Margin="0,10,0,6">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Low battery" />
+                                <TextBlock Text="Alert when the battery falls to this level on battery power." Style="{StaticResource Hint}" />
+                            </StackPanel>
+                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowBatteryChoices}"
+                                     SelectedItem="{Binding LowBatteryPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
+                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyLowBattery}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Margin="0,10,0,6">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Battery threshold" />
+                                <TextBlock Text="Alert when charging reaches this level." Style="{StaticResource Hint}" />
+                            </StackPanel>
+                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding ChargeLevelChoices}"
+                                     SelectedItem="{Binding ChargeLevelPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
+                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyChargeLevel}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Margin="0,10,0,6">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="Charger connected or disconnected" VerticalAlignment="Center" />
+                            <CheckBox Grid.Column="1" IsChecked="{Binding NotifyAcChange}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Margin="0,10,0,6">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Low storage" />
+                                <TextBlock Text="Alert when a drive has less than this much free space." Style="{StaticResource Hint}" />
+                            </StackPanel>
+                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowStorageChoices}"
+                                     SelectedItem="{Binding LowStoragePercentFree, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
+                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyLowStorage}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Display" Style="{StaticResource CardTitle}" />
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Temperature units" />
+                            <TextBlock Text="Saved for when temperatures are shown." Style="{StaticResource Hint}" />
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding TemperatureChoices}"
+                                 SelectedItem="{Binding TemperatureUnit, Mode=TwoWay}" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Margin="0,10,0,6">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Theme" />
+                            <TextBlock Text="{Binding ThemeNote}" Style="{StaticResource Hint}" Foreground="{StaticResource AccentBrush}" />
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding ThemeChoices}"
+                                 SelectedItem="{Binding Theme, Mode=TwoWay}" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

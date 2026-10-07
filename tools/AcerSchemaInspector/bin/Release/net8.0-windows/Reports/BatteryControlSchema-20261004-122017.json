@@ -1,0 +1,229 @@
+{
+  "Generated": "2026-10-04T12:20:17.8426641\u002B08:00",
+  "Machine": "JINU",
+  "Elevated": true,
+  "Namespace": "root\\wmi",
+  "Class": "BatteryControl",
+  "ClassQualifiers": {
+    "Description": "Class used to control smart battery, Version 2.86",
+    "dynamic": "True",
+    "guid": "{79772EC5-04B1-4bfd-843C-61E7F77B6CC9}",
+    "Locale": "MS\\0x409",
+    "provider": "WmiProv",
+    "WMI": "True"
+  },
+  "Properties": [
+    {
+      "Name": "Active",
+      "CimType": "Boolean",
+      "IsArray": false
+    },
+    {
+      "Name": "InstanceName",
+      "CimType": "String",
+      "IsArray": false
+    }
+  ],
+  "Instances": [
+    "ACPI\\PNP0C14\\APGe_0"
+  ],
+  "Methods": [
+    {
+      "Name": "GetBattInfoInterface",
+      "Qualifiers": {
+        "Description": "Get battery Information Interface.",
+        "Implemented": "True",
+        "read": "True",
+        "WmiMethodId": "19",
+        "write": "True"
+      },
+      "In": [
+        {
+          "Name": "uBatteryInfoIndex",
+          "CimType": "UInt32",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint32",
+            "ID": "0",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uBatteryNo",
+          "CimType": "UInt32",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint32",
+            "ID": "1",
+            "in": "True"
+          }
+        }
+      ],
+      "Out": [
+        {
+          "Name": "uReturn",
+          "CimType": "UInt32",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint32",
+            "ID": "2",
+            "out": "True"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "GetBatteryHealthControlStatus",
+      "Qualifiers": {
+        "Description": "Get Battery Health Control Status.",
+        "Implemented": "True",
+        "read": "True",
+        "WmiMethodId": "20",
+        "write": "True"
+      },
+      "In": [
+        {
+          "Name": "uBatteryNo",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "0",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uFunctionQuery",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "1",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uReserved",
+          "CimType": "UInt8",
+          "IsArray": true,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "2",
+            "in": "True",
+            "MAX": "2"
+          }
+        }
+      ],
+      "Out": [
+        {
+          "Name": "uFunctionList",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "3",
+            "out": "True"
+          }
+        },
+        {
+          "Name": "uReturn",
+          "CimType": "UInt8",
+          "IsArray": true,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "4",
+            "MAX": "2",
+            "out": "True"
+          }
+        },
+        {
+          "Name": "uFunctionStatus",
+          "CimType": "UInt8",
+          "IsArray": true,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "5",
+            "MAX": "5",
+            "out": "True"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "SetBatteryHealthControl",
+      "Qualifiers": {
+        "Description": "Set Battery Health Control.",
+        "Implemented": "True",
+        "read": "True",
+        "WmiMethodId": "21",
+        "write": "True"
+      },
+      "In": [
+        {
+          "Name": "uBatteryNo",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "0",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uFunctionMask",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "1",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uFunctionStatus",
+          "CimType": "UInt8",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "2",
+            "in": "True"
+          }
+        },
+        {
+          "Name": "uReservedIn",
+          "CimType": "UInt8",
+          "IsArray": true,
+          "Qualifiers": {
+            "CIMTYPE": "uint8",
+            "ID": "3",
+            "in": "True",
+            "MAX": "5"
+          }
+        }
+      ],
+      "Out": [
+        {
+          "Name": "uReturn",
+          "CimType": "UInt16",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint16",
+            "ID": "4",
+            "out": "True"
+          }
+        },
+        {
+          "Name": "uReservedOut",
+          "CimType": "UInt16",
+          "IsArray": false,
+          "Qualifiers": {
+            "CIMTYPE": "uint16",
+            "ID": "5",
+            "out": "True"
+          }
+        }
+      ]
+    }
+  ],
+  "Errors": []
+}

@@ -1,0 +1,6 @@
+<Application x:Class="AcerCareLite.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnMainWindowClose">
+    <!-- Theme dictionaries (Dark/Light + Styles) are merged in App.xaml.cs once the saved theme is known. -->
+</Application>

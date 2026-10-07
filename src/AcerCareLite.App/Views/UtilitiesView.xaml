@@ -1,0 +1,89 @@
+<UserControl x:Class="AcerCareLite.App.Views.UtilitiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="Section" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="MaxWidth" Value="1040" />
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <DockPanel MaxWidth="1040" HorizontalAlignment="Left">
+                <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshCommand}"
+                        Style="{StaticResource ActionButton}" VerticalAlignment="Center" />
+                <TextBlock Text="Utilities" FontSize="28" FontWeight="SemiBold" />
+            </DockPanel>
+            <TextBlock Text="{Binding ResultText}" Margin="0,8,0,0" Foreground="{StaticResource AccentBrush}" TextWrapping="Wrap" />
+
+            <Border Style="{StaticResource Section}" Margin="0,16,16,16">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Clean" Command="{Binding CleanTempCommand}"
+                            Style="{StaticResource ActionButton}" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    <StackPanel>
+                        <TextBlock Text="Temporary files" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="{Binding TempText}" Margin="0,6,0,0" TextWrapping="Wrap" />
+                        <TextBlock Text="Only files older than 24 hours in your own temp folder. Files in use are skipped."
+                                   Foreground="{StaticResource SubtleTextBrush}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Empty" Command="{Binding EmptyRecycleCommand}"
+                            Style="{StaticResource ActionButton}" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    <StackPanel>
+                        <TextBlock Text="Recycle Bin" Style="{StaticResource CardTitle}" />
+                        <TextBlock Text="{Binding RecycleText}" Margin="0,6,0,0" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Storage overview" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="{Binding ReclaimText}" Margin="0,6,0,6" />
+                    <ItemsControl ItemsSource="{Binding Drives}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,6,0,6">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Text}" Foreground="{StaticResource SubtleTextBrush}" Margin="0,2,0,6" />
+                                    <ProgressBar Value="{Binding UsedPercent, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Section}">
+                <StackPanel>
+                    <TextBlock Text="Startup apps" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Disabling only turns the entry off, like Task Manager. Nothing is deleted. Entries for all users need administrator rights."
+                               Foreground="{StaticResource SubtleTextBrush}" FontSize="12" Margin="0,4,0,4" TextWrapping="Wrap" />
+                    <ItemsControl ItemsSource="{Binding StartupRows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,8,0,8">
+                                    <Button DockPanel.Dock="Right" Content="{Binding ButtonText}" IsEnabled="{Binding CanToggle}"
+                                            Command="{Binding DataContext.ToggleStartupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" Style="{StaticResource ActionButton}"
+                                            VerticalAlignment="Center" Margin="16,0,0,0" MinWidth="80" />
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding Details}" Foreground="{StaticResource SubtleTextBrush}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding Command}" Foreground="{StaticResource SubtleTextBrush}" FontSize="11"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

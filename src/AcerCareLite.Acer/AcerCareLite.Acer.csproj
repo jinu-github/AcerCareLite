@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0-windows</TargetFramework></PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\AcerCareLite.Core\AcerCareLite.Core.csproj" /></ItemGroup>
+</Project>

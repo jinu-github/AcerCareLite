@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Dark palette. Styles.xaml is loaded after this file. -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FF1B1D21" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FF24272C" />
+    <SolidColorBrush x:Key="AppBorderBrush" Color="#FF33373D" />
+    <SolidColorBrush x:Key="TextBrush" Color="#FFE6E8EB" />
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#FF9AA0A6" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF5B9BD5" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#FF2D3036" />
+    <SolidColorBrush x:Key="SelectedBrush" Color="#FF343840" />
+</ResourceDictionary>
