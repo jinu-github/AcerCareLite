@@ -4,8 +4,8 @@
     <StackPanel>
         <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="SemiBold" />
         <TextBlock Text="{Binding Description}" FontSize="14" Margin="0,8,0,0" TextWrapping="Wrap"
-                   Foreground="{StaticResource SubtleTextBrush}" />
+                   Foreground="{DynamicResource SubtleTextBrush}" />
         <TextBlock Text="{Binding PlannedPhase, StringFormat='Planned: {0}'}" Margin="0,16,0,0"
-                   Foreground="{StaticResource AccentBrush}" />
+                   Foreground="{DynamicResource AccentBrush}" />
     </StackPanel>
 </UserControl>

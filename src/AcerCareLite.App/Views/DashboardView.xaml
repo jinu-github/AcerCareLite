@@ -1,64 +1,118 @@
 <UserControl x:Class="AcerCareLite.App.Views.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock Text="Dashboard" FontSize="28" FontWeight="SemiBold" />
-            <WrapPanel Margin="0,20,0,0">
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="CPU" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding CpuText}" Style="{StaticResource CardValue}" />
-                        <ProgressBar Value="{Binding CpuValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="GPU" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding GpuText}" Style="{StaticResource CardValue}" />
-                        <ProgressBar Value="{Binding GpuValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Memory" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding MemoryText}" Style="{StaticResource CardValue}" FontSize="20" />
-                        <ProgressBar Value="{Binding MemoryValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Battery" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding PowerText}" Style="{StaticResource CardValue}" />
-                        <ProgressBar Value="{Binding PowerValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                        <TextBlock Text="{Binding PowerStateText}" Margin="0,8,0,0"
-                                   Foreground="{StaticResource SubtleTextBrush}" />
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Storage" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding StorageNote}" Foreground="{StaticResource SubtleTextBrush}" />
-                        <ItemsControl ItemsSource="{Binding Drives}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,6,0,6">
-                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
-                                        <TextBlock Text="{Binding Text}" Foreground="{StaticResource SubtleTextBrush}" Margin="0,2,0,6" />
-                                        <ProgressBar Value="{Binding UsedPercent, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="System" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding SystemInfoText}" TextWrapping="Wrap" Margin="0,6,0,0" />
-                    </StackPanel>
-                </Border>
-            </WrapPanel>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls"
+             xmlns:conv="clr-namespace:AcerCareLite.App.Converters">
+    <UserControl.Resources>
+        <conv:UsageTextConverter x:Key="UsageText" />
+        <conv:SystemInfoLineConverter x:Key="SystemLine" />
+        <conv:CountLabelConverter x:Key="CountLabel" />
+        <conv:BytesToGbConverter x:Key="Gb" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="1560" Margin="0,0,6,28">
+
+            <ctl:PageHeader Title="Dashboard"
+                            Subtitle="{Binding Interval.TotalSeconds, StringFormat='Live readings from this device · refreshes every {0:0} s'}" />
+
+            <!-- Live readings. The negative right margin pairs with each card's right margin so the grid meets the page edge. -->
+            <UniformGrid x:Name="StatGrid" Columns="2" Margin="0,26,-16,0">
+                <ctl:StatCard Margin="0,0,16,16" Title="CPU" Description="Processor utilization"
+                              Icon="{DynamicResource Icon.Cpu}"
+                              Value="{Binding CpuText, Converter={StaticResource UsageText}, ConverterParameter=Number}"
+                              Unit="{Binding CpuText, Converter={StaticResource UsageText}, ConverterParameter=Unit}"
+                              Progress="{Binding CpuValue}" />
+                <ctl:StatCard Margin="0,0,16,16" Title="GPU" Description="Graphics utilization"
+                              Icon="{DynamicResource Icon.Gpu}"
+                              Value="{Binding GpuText, Converter={StaticResource UsageText}, ConverterParameter=Number}"
+                              Unit="{Binding GpuText, Converter={StaticResource UsageText}, ConverterParameter=Unit}"
+                              Progress="{Binding GpuValue}" />
+                <ctl:StatCard Margin="0,0,16,16" Title="Memory" Unit="%"
+                              Icon="{DynamicResource Icon.Memory}"
+                              Value="{Binding MemoryValue, StringFormat='{}{0:0}'}"
+                              Description="{Binding MemoryText}"
+                              Progress="{Binding MemoryValue}" />
+                <ctl:StatCard Margin="0,0,16,16" Title="Battery"
+                              Icon="{DynamicResource Icon.Battery}"
+                              IconBrush="{DynamicResource SuccessBrush}"
+                              ProgressBrush="{DynamicResource SuccessBrush}"
+                              Value="{Binding PowerText, Converter={StaticResource UsageText}, ConverterParameter=Number}"
+                              Unit="{Binding PowerText, Converter={StaticResource UsageText}, ConverterParameter=Unit}"
+                              Description="{Binding PowerStateText}"
+                              Progress="{Binding PowerValue}" />
+            </UniformGrid>
+
+            <!-- Storage: one entry per drive the app reports -->
+            <Border Style="{StaticResource Panel}" Padding="22,20,22,12" Margin="0,0,0,16">
+                <StackPanel>
+                    <ctl:SectionHeader Title="STORAGE" Icon="{DynamicResource Icon.Storage}"
+                                       Aside="{Binding Drives.Count, Converter={StaticResource CountLabel}, ConverterParameter=drive}" />
+                    <TextBlock Text="{Binding StorageNote}" Margin="0,12,0,0" Foreground="{DynamicResource SubtleTextBrush}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ItemsControl ItemsSource="{Binding Drives}" Margin="0,6,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,12,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Name}" FontFamily="Cascadia Mono, Consolas" FontWeight="Bold" FontSize="14.5" />
+                                    <TextBlock Grid.Column="1" HorizontalAlignment="Right" TextAlignment="Right" TextWrapping="Wrap"
+                                               Margin="12,0,0,0" FontSize="14" Foreground="{DynamicResource SubtleTextBrush}">
+                                        <Run Text="{Binding UsedBytes, Converter={StaticResource Gb}, Mode=OneWay}" FontWeight="SemiBold"
+                                             Foreground="{DynamicResource TextBrush}" /><Run Text=" / " /><Run Text="{Binding TotalBytes, Converter={StaticResource Gb}, Mode=OneWay}" /><Run Text=" GB used · " /><Run Text="{Binding UsedPercent, StringFormat='{}{0:0}%', Mode=OneWay}" />
+                                    </TextBlock>
+                                    <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0"
+                                                 Style="{StaticResource SlimProgress}"
+                                                 Value="{Binding UsedPercent, Mode=OneWay}" />
+                                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8,0,0" FontSize="12.5"
+                                               Foreground="{DynamicResource SubtleTextBrush}">
+                                        <Run Text="{Binding FreeBytes, Converter={StaticResource Gb}, Mode=OneWay}" /><Run Text=" GB free" />
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Device: model, BIOS and OS from the system provider -->
+            <Border Style="{StaticResource Panel}" Padding="22,20,22,14">
+                <StackPanel>
+                    <ctl:SectionHeader Title="SYSTEM" Icon="{DynamicResource Icon.Laptop}" />
+                    <ctl:PropertyRow Margin="0,10,0,0" ShowDivider="False" Label="Model"
+                                     Value="{Binding SystemInfoText, Converter={StaticResource SystemLine}, ConverterParameter=Model}" />
+                    <ctl:PropertyRow Label="BIOS version"
+                                     Value="{Binding SystemInfoText, Converter={StaticResource SystemLine}, ConverterParameter=Bios}" />
+                    <ctl:PropertyRow Label="Operating system"
+                                     Value="{Binding SystemInfoText, Converter={StaticResource SystemLine}, ConverterParameter=Os}" />
+                    <Button Style="{StaticResource LinkButton}" Margin="-2,10,0,2" HorizontalAlignment="Left"
+                            Click="HardwareLink_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="View hardware details" VerticalAlignment="Center" />
+                            <ctl:IconPath Width="14" Height="14" StrokeThickness="2.25" Margin="6,1,0,0"
+                                          Data="{DynamicResource Icon.ChevronRight}"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

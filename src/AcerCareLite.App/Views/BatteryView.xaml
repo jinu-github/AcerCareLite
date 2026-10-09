@@ -1,46 +1,99 @@
 <UserControl x:Class="AcerCareLite.App.Views.BatteryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock Text="Battery" FontSize="28" FontWeight="SemiBold" />
-            <WrapPanel Margin="0,20,0,0">
-                <Border Style="{StaticResource Card}">
+             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls"
+             xmlns:conv="clr-namespace:AcerCareLite.App.Converters">
+    <UserControl.Resources>
+        <conv:UsageTextConverter x:Key="UsageText" />
+        <conv:CountLabelConverter x:Key="CountLabel" />
+
+        <!-- A line of the firmware log: monospaced, hidden when empty. -->
+        <Style x:Key="LogLine" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Cascadia Mono, Consolas" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+            <Setter Property="Foreground" Value="{DynamicResource SubtleTextBrush}" />
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="1560" Margin="0,0,6,28">
+
+            <ctl:PageHeader Title="Battery" Subtitle="Read from Windows battery APIs and Acer firmware" />
+
+            <UniformGrid x:Name="TopGrid" Columns="3" Margin="0,26,-16,0">
+                <!-- Charge -->
+                <Border Style="{StaticResource Panel}" Padding="22,20,22,22" Margin="0,0,16,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ctl:SectionHeader Title="CHARGE" Icon="{DynamicResource Icon.Battery}" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,14,0,0" VerticalAlignment="Center">
+                            <ProgressBar Style="{StaticResource BatteryGauge}" Value="{Binding PercentValue, Mode=OneWay}"
+                                         VerticalAlignment="Top" />
+                            <StackPanel Margin="18,0,0,0" VerticalAlignment="Center">
+                                <TextBlock>
+                                    <Run Text="{Binding PercentText, Converter={StaticResource UsageText}, ConverterParameter=Number, Mode=OneWay}"
+                                         FontSize="38" FontWeight="SemiBold" /><Run Text=" " /><Run Text="{Binding PercentText, Converter={StaticResource UsageText}, ConverterParameter=Unit, Mode=OneWay}"
+                                         FontSize="19" Foreground="{DynamicResource SubtleTextBrush}" />
+                                </TextBlock>
+                                <TextBlock Text="{Binding StateText}" FontSize="14" TextWrapping="Wrap" MaxWidth="150"
+                                           Foreground="{DynamicResource SubtleTextBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Health and capacity -->
+                <Border Style="{StaticResource Panel}" Padding="22,20,22,12" Margin="0,0,16,16">
                     <StackPanel>
-                        <TextBlock Text="Charge" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding PercentText}" Style="{StaticResource CardValue}" />
-                        <ProgressBar Value="{Binding PercentValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
-                        <TextBlock Text="{Binding StateText}" Margin="0,8,0,0" Foreground="{StaticResource SubtleTextBrush}" />
+                        <ctl:SectionHeader Title="HEALTH &amp; CAPACITY" Icon="{DynamicResource Icon.Gauge}" Aside="Full charge ÷ Design" />
+                        <Grid Margin="0,18,0,0">
+                            <TextBlock VerticalAlignment="Bottom">
+                                <Run Text="{Binding HealthText, Converter={StaticResource UsageText}, ConverterParameter=Number, Mode=OneWay}"
+                                     FontSize="32" FontWeight="SemiBold" /><Run Text=" " /><Run Text="{Binding HealthText, Converter={StaticResource UsageText}, ConverterParameter=Unit, Mode=OneWay}"
+                                     FontSize="18" Foreground="{DynamicResource SubtleTextBrush}" />
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="12.5" Margin="0,0,0,4"
+                                       Foreground="{DynamicResource SubtleTextBrush}" TextWrapping="Wrap" TextAlignment="Right" MaxWidth="150">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} / {1}">
+                                        <Binding Path="FullText" />
+                                        <Binding Path="DesignText" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Grid>
+                        <ProgressBar Margin="0,10,0,12" Style="{StaticResource SlimProgress}" Value="{Binding HealthValue, Mode=OneWay}" />
+                        <ctl:PropertyRow Label="Design capacity" Value="{Binding DesignText}" />
+                        <ctl:PropertyRow Label="Full charge capacity" Value="{Binding FullText}" />
+                        <ctl:PropertyRow Label="Current capacity" Value="{Binding RemainingText}" />
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource Card}">
+
+                <!-- Electrical -->
+                <Border Style="{StaticResource Panel}" Padding="22,20,22,12" Margin="0,0,16,16">
                     <StackPanel>
-                        <TextBlock Text="Health (full charge vs design)" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="{Binding HealthText}" Style="{StaticResource CardValue}" />
-                        <ProgressBar Value="{Binding HealthValue, Mode=OneWay}" Style="{StaticResource ThinProgress}" />
+                        <ctl:SectionHeader Title="ELECTRICAL" Icon="{DynamicResource Icon.Zap}" />
+                        <ctl:PropertyRow Margin="0,10,0,0" ShowDivider="False" Label="Voltage" Value="{Binding VoltageText}" />
+                        <ctl:PropertyRow Label="Charge rate" Value="{Binding RateText}" />
+                        <ctl:PropertyRow Label="Cycle count" Value="{Binding CycleText}" />
                     </StackPanel>
                 </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Capacity" Style="{StaticResource CardTitle}" />
-                        <TextBlock Margin="0,8,0,0"><Run Text="Design  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding DesignText, Mode=OneWay}" /></TextBlock>
-                        <TextBlock Margin="0,4,0,0"><Run Text="Full charge  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding FullText, Mode=OneWay}" /></TextBlock>
-                        <TextBlock Margin="0,4,0,0"><Run Text="Now  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding RemainingText, Mode=OneWay}" /></TextBlock>
-                    </StackPanel>
-                </Border>
-                <Border Style="{StaticResource Card}">
-                    <StackPanel>
-                        <TextBlock Text="Power" Style="{StaticResource CardTitle}" />
-                        <TextBlock Margin="0,8,0,0"><Run Text="Voltage  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding VoltageText, Mode=OneWay}" /></TextBlock>
-                        <TextBlock Margin="0,4,0,0"><Run Text="Rate  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding RateText, Mode=OneWay}" /></TextBlock>
-                        <TextBlock Margin="0,4,0,0" TextWrapping="Wrap"><Run Text="Cycles  " Foreground="{StaticResource SubtleTextBrush}" /><Run Text="{Binding CycleText, Mode=OneWay}" /></TextBlock>
-                    </StackPanel>
-                </Border>
-            </WrapPanel>
-            <Border HorizontalAlignment="Stretch" Width="NaN" MaxWidth="1040">
+            </UniformGrid>
+
+            <!-- Acer battery health mode: same data and commands as before, new layout. -->
+            <Border Padding="22,20,22,22" Margin="0,0,0,16">
                 <Border.Style>
-                    <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                    <Style TargetType="Border" BasedOn="{StaticResource Panel}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Acer}" Value="{x:Null}">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -49,39 +102,100 @@
                     </Style>
                 </Border.Style>
                 <StackPanel DataContext="{Binding Acer}">
-                    <DockPanel>
-                        <Button DockPanel.Dock="Right" Content="{Binding ButtonText}" Command="{Binding CheckCommand}"
-                                Style="{StaticResource ActionButton}" VerticalAlignment="Center" Margin="16,0,0,0" />
-                        <TextBlock Text="Acer battery health mode (about 80 % charge limit)" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
-                    </DockPanel>
-                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource CardValue}" />
-                    <TextBlock Text="{Binding ReasonText}" TextWrapping="Wrap" Margin="0,4,0,0" />
-                    <TextBlock Text="{Binding CheckedAtText}" Margin="0,4,0,0" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="{Binding EvidenceText}" TextWrapping="Wrap" Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" />
-                    <TextBlock Text="{Binding InstallText}" TextWrapping="Wrap" Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" />
-                    <StackPanel Margin="0,12,0,0">
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsWriteAvailable}" Value="False">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <Button Content="{Binding SetButtonText}" Command="{Binding SetCommand}" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" />
-                        <TextBlock Text="{Binding WriteStatusText}" FontWeight="SemiBold" Margin="0,8,0,0" />
-                        <TextBlock Text="{Binding WriteDetailText}" TextWrapping="Wrap" Margin="0,2,0,0" />
-                        <TextBlock Text="{Binding WriteEvidenceText}" TextWrapping="Wrap" Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" />
-                    </StackPanel>
-                    <TextBlock Text="{Binding FooterText}" TextWrapping="Wrap" Margin="0,8,0,0" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" />
+                    <ctl:SectionHeader Title="ACER BATTERY HEALTH MODE" Icon="{DynamicResource Icon.Shield}" />
+
+                    <Grid x:Name="AcerGrid" Margin="0,18,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="AcerColumnA" Width="3*" />
+                            <ColumnDefinition x:Name="AcerGap" Width="20" />
+                            <ColumnDefinition x:Name="AcerColumnB" Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel x:Name="AcerMain" Grid.Column="0" Grid.Row="0">
+                            <WrapPanel>
+                                <TextBlock Text="Charge limit (about 80%)" FontSize="18" FontWeight="SemiBold"
+                                           VerticalAlignment="Center" Margin="0,0,12,0" />
+                                <Border Style="{StaticResource Pill}" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="7" Height="7" Fill="{DynamicResource MutedTextBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding StatusText}" FontSize="12.5" Margin="7,0,0,0" TextWrapping="Wrap"
+                                                   MaxWidth="360" Foreground="{DynamicResource NavTextBrush}" />
+                                    </StackPanel>
+                                </Border>
+                            </WrapPanel>
+
+                            <TextBlock Text="{Binding ReasonText}" Margin="0,10,0,0" FontSize="14" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SubtleTextBrush}" />
+
+                            <Button Command="{Binding CheckCommand}" Style="{StaticResource ActionButton}"
+                                    HorizontalAlignment="Left" Margin="0,16,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <ctl:IconPath Width="16" Height="16" StrokeThickness="1.9"
+                                                  Data="{DynamicResource Icon.Refresh}"
+                                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                    <TextBlock Text="{Binding ButtonText}" Margin="8,0,0,0" />
+                                </StackPanel>
+                            </Button>
+
+                            <StackPanel Margin="0,16,0,0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsWriteAvailable}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <Button Content="{Binding SetButtonText}" Command="{Binding SetCommand}"
+                                        Style="{StaticResource ActionButton}" HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding WriteStatusText}" FontWeight="SemiBold" Margin="0,10,0,0" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding WriteDetailText}" TextWrapping="Wrap" Margin="0,2,0,0"
+                                           Foreground="{DynamicResource SubtleTextBrush}" />
+                                <TextBlock Text="{Binding WriteEvidenceText}" TextWrapping="Wrap" Margin="0,4,0,0" FontSize="12"
+                                           Foreground="{DynamicResource MutedTextBrush}" />
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding FooterText}" TextWrapping="Wrap" Margin="0,12,0,0" FontSize="12"
+                                       Foreground="{DynamicResource MutedTextBrush}" />
+                        </StackPanel>
+
+                        <!-- What the firmware reported at the last read -->
+                        <Border x:Name="AcerLog" Grid.Column="2" Grid.Row="0" CornerRadius="8" Padding="16,14,16,16" MinHeight="150"
+                                Background="{DynamicResource WindowBackgroundBrush}"
+                                BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="FIRMWARE LOG" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource MutedTextBrush}" />
+                                <TextBlock Text="No reads yet." Style="{StaticResource LogLine}">
+                                    <TextBlock.Visibility>
+                                        <Binding Path="CheckedAtText">
+                                            <Binding.Converter>
+                                                <conv:EmptyToVisibleConverter />
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
+                                <TextBlock Text="{Binding CheckedAtText}" Style="{StaticResource LogLine}" />
+                                <TextBlock Text="{Binding EvidenceText}" Style="{StaticResource LogLine}" />
+                                <TextBlock Text="{Binding InstallText}" Style="{StaticResource LogLine}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
                 </StackPanel>
             </Border>
-            <Border Style="{StaticResource Card}" Width="NaN" HorizontalAlignment="Stretch" MaxWidth="1040">
+
+            <!-- History -->
+            <Border Style="{StaticResource Panel}" Padding="22,20,22,16">
                 <StackPanel>
-                    <TextBlock Text="Last 24 hours" Style="{StaticResource CardTitle}" />
-                    <ctl:BatteryChart Samples="{Binding History}" Height="220" Margin="0,8,0,0" />
+                    <ctl:SectionHeader Title="LAST 24 HOURS" Icon="{DynamicResource Icon.Chart}"
+                                       Aside="{Binding History.Count, Converter={StaticResource CountLabel}, ConverterParameter=recorded reading}" />
+                    <ctl:BatteryChart Samples="{Binding History}" Height="240" Margin="0,14,0,0" />
                 </StackPanel>
             </Border>
         </StackPanel>

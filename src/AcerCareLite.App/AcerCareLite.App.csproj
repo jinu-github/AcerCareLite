@@ -6,9 +6,14 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>AcerCareLite.App</RootNamespace>
     <AssemblyName>AcerCareLite</AssemblyName>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Embedded so XAML and the tray can load it: pack://application:,,,/AppIcon.ico -->
+    <Resource Include="AppIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AcerCareLite.Core\AcerCareLite.Core.csproj" />

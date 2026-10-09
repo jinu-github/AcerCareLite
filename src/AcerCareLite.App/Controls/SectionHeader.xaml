@@ -1,0 +1,27 @@
+<UserControl x:Class="AcerCareLite.App.Controls.SectionHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls"
+             x:Name="Root">
+    <!-- Icon, small uppercase title, and an optional note on the right (a count, a total, a hint). In a narrow card the note sits under the title. -->
+    <ctl:AdaptiveRowPanel Gap="12" StackGap="3" StackedIndent="27">
+        <StackPanel Orientation="Horizontal">
+            <ctl:IconPath Width="17" Height="17" StrokeThickness="1.6" VerticalAlignment="Center"
+                          Data="{Binding Icon, ElementName=Root}" Stroke="{DynamicResource AccentBrush}" />
+            <TextBlock Text="{Binding Title, ElementName=Root}" Margin="10,0,0,0" FontSize="13" FontWeight="SemiBold"
+                       Foreground="{DynamicResource NavTextBrush}" VerticalAlignment="Center" TextWrapping="NoWrap" />
+        </StackPanel>
+        <TextBlock Text="{Binding Aside, ElementName=Root}" FontSize="12.5" HorizontalAlignment="Left"
+                   Foreground="{DynamicResource SubtleTextBrush}" VerticalAlignment="Center" TextWrapping="Wrap">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </ctl:AdaptiveRowPanel>
+</UserControl>

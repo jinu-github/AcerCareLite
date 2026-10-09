@@ -1,136 +1,105 @@
 <UserControl x:Class="AcerCareLite.App.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <UserControl.Resources>
-        <Style x:Key="Section" TargetType="Border" BasedOn="{StaticResource Card}">
-            <Setter Property="Width" Value="NaN" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="MaxWidth" Value="1040" />
-            <Setter Property="Margin" Value="0,0,16,16" />
-        </Style>
-        <Style x:Key="Hint" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-        </Style>
-    </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold" />
-            <TextBlock Text="{Binding StatusText}" Margin="0,8,0,0" Foreground="{StaticResource AccentBrush}" />
-            <TextBlock Margin="0,8,0,16" Style="{StaticResource Hint}" MaxWidth="1000" HorizontalAlignment="Left"
-                       Text="Changes save immediately." />
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel MaxWidth="1560" Margin="0,0,6,28">
 
-            <Border Style="{StaticResource Section}">
-                <StackPanel>
-                    <TextBlock Text="General" Style="{StaticResource CardTitle}" />
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <ctl:PageHeader Title="Settings" Subtitle="Application preferences · changes save immediately">
+                <ctl:PageHeader.Actions>
+                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Foreground="{DynamicResource AccentBrush}" />
+                </ctl:PageHeader.Actions>
+            </ctl:PageHeader>
+
+            <!-- Two independent columns, so a short card never stretches to match a tall one.
+                 Below the width in SettingsView.xaml.cs the cards are moved into one column. -->
+            <Grid x:Name="CardGrid" Margin="0,26,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="ColumnA" Width="*" />
+                    <ColumnDefinition x:Name="Gap" Width="16" />
+                    <ColumnDefinition x:Name="ColumnB" Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel x:Name="LeftColumn" Grid.Column="0" VerticalAlignment="Top" Margin="0,0,0,-16">
+                    <Border x:Name="GeneralCard" Style="{StaticResource Panel}" Padding="22,20,22,8" Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Start with Windows" />
-                            <TextBlock Text="Adds AcerCareLite to your startup apps. Turn it off here or in Utilities." Style="{StaticResource Hint}" />
+                            <ctl:SectionHeader Title="GENERAL" Icon="{DynamicResource Icon.Sliders}" />
+                            <ctl:SettingRow Margin="0,14,0,0" Title="Start with Windows"
+                                            Description="Adds AcerCareLite to your startup apps. Turn it off here or in Utilities.">
+                                <CheckBox IsChecked="{Binding StartWithWindows}" Style="{StaticResource SwitchStyle}" />
+                            </ctl:SettingRow>
+                            <ctl:SettingRow Title="Start minimized">
+                                <CheckBox IsChecked="{Binding StartMinimized}" Style="{StaticResource SwitchStyle}" />
+                            </ctl:SettingRow>
+                            <ctl:SettingRow Title="Minimize to tray" Description="Closing the window keeps the app in the notification area">
+                                <CheckBox IsChecked="{Binding MinimizeToTray}" Style="{StaticResource SwitchStyle}" />
+                            </ctl:SettingRow>
                         </StackPanel>
-                        <CheckBox Grid.Column="1" IsChecked="{Binding StartWithWindows}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                        <TextBlock Text="Start minimized" VerticalAlignment="Center" />
-                        <CheckBox Grid.Column="1" IsChecked="{Binding StartMinimized}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                        <TextBlock Text="Minimize to tray" VerticalAlignment="Center" />
-                        <CheckBox Grid.Column="1" IsChecked="{Binding MinimizeToTray}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                    </Grid>
-                </StackPanel>
-            </Border>
+                    </Border>
 
-            <Border Style="{StaticResource Section}">
-                <StackPanel>
-                    <TextBlock Text="Monitoring" Style="{StaticResource CardTitle}" />
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <Border x:Name="DisplayCard" Style="{StaticResource Panel}" Padding="22,20,22,8" Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Refresh interval" />
-                            <TextBlock Text="How often the Dashboard and Battery pages update while they are open." Style="{StaticResource Hint}" />
+                            <ctl:SectionHeader Title="DISPLAY" Icon="{DynamicResource Icon.Palette}" />
+                            <ctl:SettingRow Margin="0,14,0,0" Title="Temperature units" Description="Saved for when temperatures are shown.">
+                                <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding TemperatureChoices}"
+                                         SelectedItem="{Binding TemperatureUnit, Mode=TwoWay}" />
+                            </ctl:SettingRow>
+                            <ctl:SettingRow Title="Application theme" Description="{Binding ThemeNote}">
+                                <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding ThemeChoices}"
+                                         SelectedItem="{Binding Theme, Mode=TwoWay}" />
+                            </ctl:SettingRow>
                         </StackPanel>
-                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding IntervalChoices}"
-                                 SelectedItem="{Binding MonitoringIntervalSeconds, Mode=TwoWay}" ItemStringFormat="{}{0} s" VerticalAlignment="Center" />
-                    </Grid>
+                    </Border>
                 </StackPanel>
-            </Border>
 
-            <Border Style="{StaticResource Section}">
-                <StackPanel>
-                    <TextBlock Text="Notifications" Style="{StaticResource CardTitle}" />
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                        <TextBlock Text="Show notifications" VerticalAlignment="Center" />
-                        <CheckBox Grid.Column="1" IsChecked="{Binding NotificationsEnabled}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                    </Grid>
-                    <StackPanel IsEnabled="{Binding NotificationsEnabled}">
-                        <Grid Margin="0,10,0,6">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="Low battery" />
-                                <TextBlock Text="Alert when the battery falls to this level on battery power." Style="{StaticResource Hint}" />
+                <StackPanel x:Name="RightColumn" Grid.Column="2" VerticalAlignment="Top" Margin="0,0,0,-16">
+                    <Border x:Name="NotificationsCard" Style="{StaticResource Panel}" Padding="22,20,22,8" Margin="0,0,0,16">
+                        <StackPanel>
+                            <ctl:SectionHeader Title="NOTIFICATIONS" Icon="{DynamicResource Icon.Bell}" />
+                            <ctl:SettingRow Margin="0,14,0,0" Title="Show notifications">
+                                <CheckBox IsChecked="{Binding NotificationsEnabled}" Style="{StaticResource SwitchStyle}" />
+                            </ctl:SettingRow>
+                            <StackPanel IsEnabled="{Binding NotificationsEnabled}">
+                                <ctl:SettingRow Title="Low battery" Description="Alert when the battery falls to this level on battery power.">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowBatteryChoices}"
+                                                 SelectedItem="{Binding LowBatteryPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" />
+                                        <CheckBox Margin="14,0,0,0" IsChecked="{Binding NotifyLowBattery}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ctl:SettingRow>
+                                <ctl:SettingRow Title="Battery threshold" Description="Alert when charging reaches this level.">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding ChargeLevelChoices}"
+                                                 SelectedItem="{Binding ChargeLevelPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" />
+                                        <CheckBox Margin="14,0,0,0" IsChecked="{Binding NotifyChargeLevel}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ctl:SettingRow>
+                                <ctl:SettingRow Title="Charger connected or disconnected">
+                                    <CheckBox IsChecked="{Binding NotifyAcChange}" Style="{StaticResource SwitchStyle}" />
+                                </ctl:SettingRow>
+                                <ctl:SettingRow Title="Low storage" Description="Alert when a drive has less than this much free space.">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowStorageChoices}"
+                                                 SelectedItem="{Binding LowStoragePercentFree, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" />
+                                        <CheckBox Margin="14,0,0,0" IsChecked="{Binding NotifyLowStorage}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </ctl:SettingRow>
                             </StackPanel>
-                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowBatteryChoices}"
-                                     SelectedItem="{Binding LowBatteryPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
-                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyLowBattery}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                        </Grid>
-                        <Grid Margin="0,10,0,6">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="Battery threshold" />
-                                <TextBlock Text="Alert when charging reaches this level." Style="{StaticResource Hint}" />
-                            </StackPanel>
-                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding ChargeLevelChoices}"
-                                     SelectedItem="{Binding ChargeLevelPercent, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
-                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyChargeLevel}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                        </Grid>
-                        <Grid Margin="0,10,0,6">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                            <TextBlock Text="Charger connected or disconnected" VerticalAlignment="Center" />
-                            <CheckBox Grid.Column="1" IsChecked="{Binding NotifyAcChange}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                        </Grid>
-                        <Grid Margin="0,10,0,6">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="Low storage" />
-                                <TextBlock Text="Alert when a drive has less than this much free space." Style="{StaticResource Hint}" />
-                            </StackPanel>
-                            <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding LowStorageChoices}"
-                                     SelectedItem="{Binding LowStoragePercentFree, Mode=TwoWay}" ItemStringFormat="{}{0}%" VerticalAlignment="Center" Margin="0,0,12,0" />
-                            <CheckBox Grid.Column="2" IsChecked="{Binding NotifyLowStorage}" Style="{StaticResource SwitchStyle}" VerticalAlignment="Center" />
-                        </Grid>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </StackPanel>
+                    </Border>
 
-            <Border Style="{StaticResource Section}">
-                <StackPanel>
-                    <TextBlock Text="Display" Style="{StaticResource CardTitle}" />
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <Border x:Name="MonitoringCard" Style="{StaticResource Panel}" Padding="22,20,22,8" Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Temperature units" />
-                            <TextBlock Text="Saved for when temperatures are shown." Style="{StaticResource Hint}" />
+                            <ctl:SectionHeader Title="MONITORING" Icon="{DynamicResource Icon.Pulse}" />
+                            <ctl:SettingRow Margin="0,14,0,0" Title="Refresh interval"
+                                            Description="How often the Dashboard and Battery pages update while they are open.">
+                                <ListBox Style="{StaticResource ChoiceList}" ItemsSource="{Binding IntervalChoices}"
+                                         SelectedItem="{Binding MonitoringIntervalSeconds, Mode=TwoWay}" ItemStringFormat="{}{0}s" />
+                            </ctl:SettingRow>
                         </StackPanel>
-                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding TemperatureChoices}"
-                                 SelectedItem="{Binding TemperatureUnit, Mode=TwoWay}" VerticalAlignment="Center" />
-                    </Grid>
-                    <Grid Margin="0,10,0,6">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="Theme" />
-                            <TextBlock Text="{Binding ThemeNote}" Style="{StaticResource Hint}" Foreground="{StaticResource AccentBrush}" />
-                        </StackPanel>
-                        <ListBox Grid.Column="1" Style="{StaticResource ChoiceList}" ItemsSource="{Binding ThemeChoices}"
-                                 SelectedItem="{Binding Theme, Mode=TwoWay}" VerticalAlignment="Center" />
-                    </Grid>
+                    </Border>
                 </StackPanel>
-            </Border>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

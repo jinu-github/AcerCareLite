@@ -1,0 +1,32 @@
+<UserControl x:Class="AcerCareLite.App.Controls.StatCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:AcerCareLite.App.Controls"
+             x:Name="Root">
+    <!-- Icon and label, a large value with a small unit, a description line, then a progress bar. -->
+    <Border Style="{StaticResource Panel}" Padding="22,20,22,22">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <ctl:IconPath Width="17" Height="17" StrokeThickness="1.6" VerticalAlignment="Center"
+                              Data="{Binding Icon, ElementName=Root}"
+                              Stroke="{Binding IconBrush, ElementName=Root}" />
+                <TextBlock Text="{Binding Title, ElementName=Root}" Margin="10,0,0,0" FontSize="14"
+                           Foreground="{DynamicResource NavTextBrush}" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock Margin="0,14,0,0" TextWrapping="Wrap" TextTrimming="None">
+                <Run Text="{Binding Value, ElementName=Root, Mode=OneWay}" FontSize="34" FontWeight="SemiBold" />
+                <Run Text=" " />
+                <Run Text="{Binding Unit, ElementName=Root, Mode=OneWay}" FontSize="19"
+                     Foreground="{DynamicResource SubtleTextBrush}" />
+            </TextBlock>
+
+            <TextBlock Text="{Binding Description, ElementName=Root}" Margin="0,2,0,0" FontSize="13.5"
+                       Foreground="{DynamicResource SubtleTextBrush}" TextWrapping="Wrap" MinHeight="19" />
+
+            <ProgressBar Margin="0,14,0,0" Style="{StaticResource SlimProgress}"
+                         Value="{Binding Progress, ElementName=Root, Mode=OneWay}"
+                         Foreground="{Binding ProgressBrush, ElementName=Root}" />
+        </StackPanel>
+    </Border>
+</UserControl>

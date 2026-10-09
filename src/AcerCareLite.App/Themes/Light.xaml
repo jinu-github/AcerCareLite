@@ -1,12 +1,43 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Light palette. Styles.xaml is loaded after this file. -->
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF3F4F6" />
+    <!-- Light palette. Styles.xaml is loaded after this file. Every key here must also exist in Dark.xaml. -->
+
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF3F5F8" />
+    <SolidColorBrush x:Key="SidebarBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="TopBarBrush" Color="#FFF8F9FB" />
     <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#FFF6F7F9" />
+
+    <!-- Lines -->
     <SolidColorBrush x:Key="AppBorderBrush" Color="#FFD9DCE1" />
+    <SolidColorBrush x:Key="BorderSubtleBrush" Color="#FFE6E8EC" />
+
+    <!-- Text -->
     <SolidColorBrush x:Key="TextBrush" Color="#FF1B1D21" />
+    <SolidColorBrush x:Key="NavTextBrush" Color="#FF3A4048" />
     <SolidColorBrush x:Key="SubtleTextBrush" Color="#FF5F6670" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#FF6B7480" />
+
+    <!-- Accent -->
     <SolidColorBrush x:Key="AccentBrush" Color="#FF1F6FB5" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FF185A94" />
+    <SolidColorBrush x:Key="AccentSubtleBrush" Color="#FFDCEBF8" />
+    <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFFFF" />
+
+    <!-- Status -->
+    <SolidColorBrush x:Key="SuccessBrush" Color="#FF1E8A47" />
+    <SolidColorBrush x:Key="SuccessSubtleBrush" Color="#FFDDF3E5" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#FF9A6700" />
+    <SolidColorBrush x:Key="WarningSubtleBrush" Color="#FFFFF1D0" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#FFC93C37" />
+    <SolidColorBrush x:Key="DangerSubtleBrush" Color="#FFFBE1E0" />
+
+    <!-- Interaction (names kept from the first version of the app) -->
     <SolidColorBrush x:Key="HoverBrush" Color="#FFEDEFF2" />
-    <SolidColorBrush x:Key="SelectedBrush" Color="#FFE2E5EA" />
+    <SolidColorBrush x:Key="SelectedBrush" Color="#FFDCEBF8" />
+    <!-- Window close button (same red in both themes, like the Windows caption button) -->
+    <SolidColorBrush x:Key="CloseHoverBrush" Color="#FFC42B1C" />
+    <SolidColorBrush x:Key="ClosePressedBrush" Color="#FFA52416" />
+    <SolidColorBrush x:Key="OnCloseBrush" Color="#FFFFFFFF" />
 </ResourceDictionary>
